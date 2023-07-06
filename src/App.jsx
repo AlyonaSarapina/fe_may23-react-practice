@@ -38,18 +38,21 @@ const getFilteredProducts = (array, query) => {
 const productsByCategories = (array, category) => {
   let copy = [...array];
 
-  copy = copy.filter(product => product.category.id === category);
+  if (category) {
+    copy = copy.filter(product => product.category.id === category);
+  }
 
   return copy;
 };
 
 export const App = () => {
   const [query, setQuery] = useState('');
-  const [category, setCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
 
   const visibleUsers = getFilteredProducts(productsWithUsers, query);
 
-  const visibleUsersByCategories = (visibleUsers, category);
+  const visibleUsersByCategories
+  = productsByCategories(visibleUsers, selectedCategory);
 
   return (
     <div className="section">
@@ -72,6 +75,7 @@ export const App = () => {
 
               {usersFromServer.map(user => (
                 <a
+                  key={user.id}
                   onClick={() => setQuery(user.id)}
                   data-cy="FilterUser"
                   href="#/"
@@ -115,6 +119,7 @@ export const App = () => {
 
             <div className="panel-block is-flex-wrap-wrap">
               <a
+                onClick={() => setSelectedCategory('')}
                 href="#/"
                 data-cy="AllCategories"
                 className="button is-success mr-6 is-outlined"
@@ -124,8 +129,11 @@ export const App = () => {
 
               {categoriesFromServer.map(category => (
                 <a
+                  onClick={() => setSelectedCategory(category.id)}
+                  key={category.id}
                   data-cy="Category"
-                  className="button mr-2 my-1"
+                  className={classNames('button mr-2 my-1',
+                    { 'is-info': category === category.id })}
                   href="#/"
                 >
                   {category.title}
@@ -206,7 +214,7 @@ export const App = () => {
               </thead>
 
               <tbody>
-                {visibleUsers.map(product => (
+                {visibleUsersByCategories.map(product => (
                   <tr data-cy="Product" key={product.id}>
                     <td className="has-text-weight-bold" data-cy="ProductId">
                       {product.id}
