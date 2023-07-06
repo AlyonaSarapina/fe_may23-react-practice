@@ -22,13 +22,11 @@ const productsWithUsers = products.map(product => ({
 const getFilteredProducts = (array, query) => {
   let filteredArray = [...array];
 
-  if (filteredArray.some(product => product.user.id === +query)) {
+  if (typeof query === 'number') {
     filteredArray = filteredArray.filter(product => product.user.id === +query);
   }
 
-  if (filteredArray
-    .some(product => product.name.toLowerCase()
-      .includes(query.toLowerCase().trim()))) {
+  if (typeof query === 'string') {
     filteredArray = filteredArray
       .filter(product => product.name.toLowerCase()
         .includes(query.toLowerCase().trim()));
@@ -42,8 +40,7 @@ export const App = () => {
 
   const visibleUsers = getFilteredProducts(productsWithUsers, query);
 
-  const findUser = id => productsWithUsers
-    .find(user => user.user.id === id).user.name;
+  const findUser = id => usersFromServer.find(user => user.id === id).name;
 
   return (
     <div className="section">
@@ -64,7 +61,7 @@ export const App = () => {
               </a>
 
               <a
-                onClick={() => setQuery('1')}
+                onClick={() => setQuery(1)}
                 data-cy="FilterUser"
                 href="#/"
               >
@@ -72,7 +69,7 @@ export const App = () => {
               </a>
 
               <a
-                onClick={() => setQuery('2')}
+                onClick={() => setQuery(2)}
                 data-cy="FilterUser"
                 href="#/"
               >
@@ -80,11 +77,19 @@ export const App = () => {
               </a>
 
               <a
-                onClick={() => setQuery('3')}
+                onClick={() => setQuery(3)}
                 data-cy="FilterUser"
                 href="#/"
               >
                 {findUser(3)}
+              </a>
+
+              <a
+                onClick={() => setQuery(4)}
+                data-cy="FilterUser"
+                href="#/"
+              >
+                {findUser(4)}
               </a>
             </p>
 
@@ -92,7 +97,6 @@ export const App = () => {
               <p className="control has-icons-left has-icons-right">
                 <input
                   onChange={event => setQuery(event.target.value)}
-                  value={query}
                   data-cy="SearchField"
                   type="text"
                   className="input"
@@ -130,7 +134,7 @@ export const App = () => {
 
               <a
                 data-cy="Category"
-                className="button mr-2 my-1 is-info"
+                className="button mr-2 my-1"
                 href="#/"
               >
                 Category 1
@@ -146,7 +150,7 @@ export const App = () => {
 
               <a
                 data-cy="Category"
-                className="button mr-2 my-1 is-info"
+                className="button mr-2 my-1"
                 href="#/"
               >
                 Category 3
@@ -165,6 +169,7 @@ export const App = () => {
                 data-cy="ResetAllButton"
                 href="#/"
                 className="button is-link is-outlined is-fullwidth"
+                onClick={() => setQuery('')}
               >
                 Reset all filters
               </a>
@@ -173,89 +178,92 @@ export const App = () => {
         </div>
 
         <div className="box table-container">
-          <p data-cy="NoMatchingMessage">
-            No products matching selected criteria
-          </p>
+          {visibleUsers.length ? (
+            <table
+              data-cy="ProductTable"
+              className="table is-striped is-narrow is-fullwidth"
+            >
+              <thead>
+                <tr>
+                  <th>
+                    <span className="is-flex is-flex-wrap-nowrap">
+                      ID
 
-          <table
-            data-cy="ProductTable"
-            className="table is-striped is-narrow is-fullwidth"
-          >
-            <thead>
-              <tr>
-                <th>
-                  <span className="is-flex is-flex-wrap-nowrap">
-                    ID
+                      <a href="#/">
+                        <span className="icon">
+                          <i data-cy="SortIcon" className="fas fa-sort" />
+                        </span>
+                      </a>
+                    </span>
+                  </th>
 
-                    <a href="#/">
-                      <span className="icon">
-                        <i data-cy="SortIcon" className="fas fa-sort" />
-                      </span>
-                    </a>
-                  </span>
-                </th>
+                  <th>
+                    <span className="is-flex is-flex-wrap-nowrap">
+                      Product
 
-                <th>
-                  <span className="is-flex is-flex-wrap-nowrap">
-                    Product
+                      <a href="#/">
+                        <span className="icon">
+                          <i data-cy="SortIcon" className="fas fa-sort-down" />
+                        </span>
+                      </a>
+                    </span>
+                  </th>
 
-                    <a href="#/">
-                      <span className="icon">
-                        <i data-cy="SortIcon" className="fas fa-sort-down" />
-                      </span>
-                    </a>
-                  </span>
-                </th>
+                  <th>
+                    <span className="is-flex is-flex-wrap-nowrap">
+                      Category
 
-                <th>
-                  <span className="is-flex is-flex-wrap-nowrap">
-                    Category
+                      <a href="#/">
+                        <span className="icon">
+                          <i data-cy="SortIcon" className="fas fa-sort-up" />
+                        </span>
+                      </a>
+                    </span>
+                  </th>
 
-                    <a href="#/">
-                      <span className="icon">
-                        <i data-cy="SortIcon" className="fas fa-sort-up" />
-                      </span>
-                    </a>
-                  </span>
-                </th>
+                  <th>
+                    <span className="is-flex is-flex-wrap-nowrap">
+                      User
 
-                <th>
-                  <span className="is-flex is-flex-wrap-nowrap">
-                    User
-
-                    <a href="#/">
-                      <span className="icon">
-                        <i data-cy="SortIcon" className="fas fa-sort" />
-                      </span>
-                    </a>
-                  </span>
-                </th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {visibleUsers.map(product => (
-                <tr data-cy="Product" key={product.id}>
-                  <td className="has-text-weight-bold" data-cy="ProductId">
-                    {product.id}
-                  </td>
-
-                  <td data-cy="ProductName">{product.name}</td>
-                  <td data-cy="ProductCategory">{`${product.category.icon} - ${product.category.title}`}</td>
-
-                  <td
-                    data-cy="ProductUser"
-                    className={classNames(
-                      { 'has-text-danger': product.user.sex === 'f',
-                        'has-text-link': product.user.sex === 'm' },
-                    )}
-                  >
-                    {product.user.name}
-                  </td>
+                      <a href="#/">
+                        <span className="icon">
+                          <i data-cy="SortIcon" className="fas fa-sort" />
+                        </span>
+                      </a>
+                    </span>
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+
+              <tbody>
+                {visibleUsers.map(product => (
+                  <tr data-cy="Product" key={product.id}>
+                    <td className="has-text-weight-bold" data-cy="ProductId">
+                      {product.id}
+                    </td>
+
+                    <td data-cy="ProductName">{product.name}</td>
+                    <td data-cy="ProductCategory">{`${product.category.icon} - ${product.category.title}`}</td>
+
+                    <td
+                      data-cy="ProductUser"
+                      className={classNames(
+                        { 'has-text-danger': product.user.sex === 'f',
+                          'has-text-link': product.user.sex === 'm' },
+                      )}
+                    >
+                      {product.user.name}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p data-cy="NoMatchingMessage">
+              No products matching selected criteria
+            </p>
+          )}
+
         </div>
       </div>
     </div>
