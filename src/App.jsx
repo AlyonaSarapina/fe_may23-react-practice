@@ -54,6 +54,11 @@ export const App = () => {
   const visibleUsersByCategories
   = productsByCategories(visibleUsers, selectedCategory);
 
+  const clearFields = () => {
+    setQuery('');
+    setSelectedCategory('');
+  }
+
   return (
     <div className="section">
       <div className="container">
@@ -122,7 +127,9 @@ export const App = () => {
                 onClick={() => setSelectedCategory('')}
                 href="#/"
                 data-cy="AllCategories"
-                className="button is-success mr-6 is-outlined"
+                className={classNames('button is-success mr-6', {
+                  'is-outlined': selectedCategory,
+                })}
               >
                 All
               </a>
@@ -133,7 +140,7 @@ export const App = () => {
                   key={category.id}
                   data-cy="Category"
                   className={classNames('button mr-2 my-1',
-                    { 'is-info': category === category.id })}
+                    { 'is-info': selectedCategory === category.id })}
                   href="#/"
                 >
                   {category.title}
@@ -147,7 +154,7 @@ export const App = () => {
                 data-cy="ResetAllButton"
                 href="#/"
                 className="button is-link is-outlined is-fullwidth"
-                onClick={() => setQuery('')}
+                onClick={clearFields}
               >
                 Reset all filters
               </a>
