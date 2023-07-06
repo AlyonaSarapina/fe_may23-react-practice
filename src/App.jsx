@@ -57,7 +57,7 @@ export const App = () => {
   const clearFields = () => {
     setQuery('');
     setSelectedCategory('');
-  }
+  };
 
   return (
     <div className="section">
