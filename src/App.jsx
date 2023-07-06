@@ -26,7 +26,7 @@ const getFilteredProducts = (array, query) => {
     filteredArray = filteredArray.filter(product => product.user.id === +query);
   }
 
-  if (typeof query === 'string') {
+  if (typeof query === 'string' && query !== 'all') {
     filteredArray = filteredArray
       .filter(product => product.name.toLowerCase()
         .includes(query.toLowerCase().trim()));
@@ -56,6 +56,7 @@ export const App = () => {
                 onClick={() => setQuery('all')}
                 data-cy="FilterAllUsers"
                 href="#/"
+                className={classNames({ 'is-active': query === 'all' })}
               >
                 All
               </a>
@@ -64,6 +65,7 @@ export const App = () => {
                 onClick={() => setQuery(1)}
                 data-cy="FilterUser"
                 href="#/"
+                className={classNames({ 'is-active': query === 1 })}
               >
                 {findUser(1)}
               </a>
@@ -72,6 +74,7 @@ export const App = () => {
                 onClick={() => setQuery(2)}
                 data-cy="FilterUser"
                 href="#/"
+                className={classNames({ 'is-active': query === 2 })}
               >
                 {findUser(2)}
               </a>
@@ -80,6 +83,7 @@ export const App = () => {
                 onClick={() => setQuery(3)}
                 data-cy="FilterUser"
                 href="#/"
+                className={classNames({ 'is-active': query === 3 })}
               >
                 {findUser(3)}
               </a>
@@ -88,6 +92,7 @@ export const App = () => {
                 onClick={() => setQuery(4)}
                 data-cy="FilterUser"
                 href="#/"
+                className={classNames({ 'is-active': query === 4 })}
               >
                 {findUser(4)}
               </a>
