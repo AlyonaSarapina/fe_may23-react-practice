@@ -35,6 +35,12 @@ const getFilteredProducts = (array, query) => {
   return filteredArray;
 };
 
+const productsByCategories = (array, category) => {
+  const copy = [...array];
+
+  copy = copy.filter(product => product.category);
+};
+
 export const App = () => {
   const [query, setQuery] = useState('');
 
@@ -61,41 +67,17 @@ export const App = () => {
                 All
               </a>
 
-              <a
-                onClick={() => setQuery(1)}
-                data-cy="FilterUser"
-                href="#/"
-                className={classNames({ 'is-active': query === 1 })}
-              >
-                {findUser(1)}
-              </a>
+              {usersFromServer.map(user => (
+                <a
+                  onClick={() => setQuery(user.id)}
+                  data-cy="FilterUser"
+                  href="#/"
+                  className={classNames({ 'is-active': query === user.id })}
+                >
+                  {findUser(user.id)}
+                </a>
+              ))}
 
-              <a
-                onClick={() => setQuery(2)}
-                data-cy="FilterUser"
-                href="#/"
-                className={classNames({ 'is-active': query === 2 })}
-              >
-                {findUser(2)}
-              </a>
-
-              <a
-                onClick={() => setQuery(3)}
-                data-cy="FilterUser"
-                href="#/"
-                className={classNames({ 'is-active': query === 3 })}
-              >
-                {findUser(3)}
-              </a>
-
-              <a
-                onClick={() => setQuery(4)}
-                data-cy="FilterUser"
-                href="#/"
-                className={classNames({ 'is-active': query === 4 })}
-              >
-                {findUser(4)}
-              </a>
             </p>
 
             <div className="panel-block">
@@ -137,36 +119,16 @@ export const App = () => {
                 All
               </a>
 
-              <a
-                data-cy="Category"
-                className="button mr-2 my-1"
-                href="#/"
-              >
-                Category 1
-              </a>
+              {categoriesFromServer.map(category => (
+                <a
+                  data-cy="Category"
+                  className="button mr-2 my-1"
+                  href="#/"
+                >
+                  {category.title}
+                </a>
+              ))}
 
-              <a
-                data-cy="Category"
-                className="button mr-2 my-1"
-                href="#/"
-              >
-                Category 2
-              </a>
-
-              <a
-                data-cy="Category"
-                className="button mr-2 my-1"
-                href="#/"
-              >
-                Category 3
-              </a>
-              <a
-                data-cy="Category"
-                className="button mr-2 my-1"
-                href="#/"
-              >
-                Category 4
-              </a>
             </div>
 
             <div className="panel-block">
