@@ -36,17 +36,20 @@ const getFilteredProducts = (array, query) => {
 };
 
 const productsByCategories = (array, category) => {
-  const copy = [...array];
+  let copy = [...array];
 
-  copy = copy.filter(product => product.category);
+  copy = copy.filter(product => product.category.id === category);
+
+  return copy;
 };
 
 export const App = () => {
   const [query, setQuery] = useState('');
+  const [category, setCategory] = useState('');
 
   const visibleUsers = getFilteredProducts(productsWithUsers, query);
 
-  const findUser = id => usersFromServer.find(user => user.id === id).name;
+  const visibleUsersByCategories = (visibleUsers, category);
 
   return (
     <div className="section">
@@ -74,7 +77,7 @@ export const App = () => {
                   href="#/"
                   className={classNames({ 'is-active': query === user.id })}
                 >
-                  {findUser(user.id)}
+                  {user.name}
                 </a>
               ))}
 
